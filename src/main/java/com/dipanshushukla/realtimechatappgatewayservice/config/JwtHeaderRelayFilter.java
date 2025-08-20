@@ -17,7 +17,7 @@ public class JwtHeaderRelayFilter implements WebFilter {
 
         String path = exchange.getRequest().getURI().getPath();
 
-        if (path.startsWith("/ws")) {
+        if (path.startsWith("/ws") || path.equals("/")) {
             return chain.filter(exchange); // Skip JWT logic for WebSockets
         }
 
