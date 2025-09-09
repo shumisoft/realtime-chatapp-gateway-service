@@ -119,20 +119,20 @@ logging:
         org.springframework.cloud.gateway.filter: DEBUG
         org.springframework.cloud.gateway.handler: DEBUG
 
-management:
-    tracing:
-        sampling:
-            probability: 1.0 # 100% sampling for development
-    otlp:
-        metrics:
-            export:
-                url: ${OTEL_METRICS_URI:}
-    opentelemetry:
-        tracing:
-            export:
-                otlp:
-                    endpoint: ${OTEL_TRACES_URI:}
-        logging:
-            export:
-                otlp:
-                    endpoint: ${OTEL_LOGS_URI:}
+# management:
+#     tracing:
+#         sampling:
+#             probability: 1.0 # 100% sampling for development
+#     otlp:
+#         metrics:
+#             export:
+#                 url: ${OTEL_METRICS_URI:}
+#     opentelemetry:
+#         tracing:
+#             export:
+#                 otlp:
+#                     endpoint: ${OTEL_TRACES_URI:}
+#         logging:
+#             export:
+#                 otlp:
+#                     endpoint: ${OTEL_LOGS_URI:}
