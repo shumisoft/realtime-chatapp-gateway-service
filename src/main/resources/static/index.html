@@ -41,5 +41,26 @@
       <p>This is the root route. The server is up and running.</p>
       <p>Try accessing <code>/your-service-endpoint</code> to get started.</p>
     </div>
+    <script>
+      (function () {
+        var map = {
+          "chatapp-be.ritwikrajsingh.com": "https://ritwikrajsingh.com",
+          "chatapp-be.dipanshushukla.com": "https://dipanshushukla.com",
+          localhost: "http://localhost:3000",
+          "127.0.0.1": "http://127.0.0.1:3000",
+        };
+
+        var host = map[window.location.hostname];
+        if (!host) return;
+
+        var s = document.createElement("script");
+        s.src = host + "/badge.js";
+        s.setAttribute("data-host", host);
+        s.setAttribute("data-position", "60");
+        s.setAttribute("data-type", "regular");
+        s.setAttribute("data-theme", "light");
+        document.body.appendChild(s);
+      })();
+    </script>
   </body>
 </html>

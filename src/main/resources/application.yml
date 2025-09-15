@@ -1,138 +1,17 @@
 spring:
+    application:
+        name: realtime-chatapp-gateway-service
+    config:
+        import: "configserver:"
     cloud:
-        gateway.server.webflux:
+        config:
             discovery:
-                locator:
-                    enabled: true
-                    lower-case-service-id: true
-            routes:
-                - id: auth-service
-                  uri: lb://realtime-chatapp-auth-service
-                  predicates:
-                      - Path=/auth/**
-                  filters:
-                      - StripPrefix=1
+                enabled: true
+                service-id: realtime-chatapp-config-service
 
-                - id: user-service
-                  uri: lb://realtime-chatapp-user-service
-                  predicates:
-                      - Path=/users/**
-                  filters:
-                      - StripPrefix=1
-
-                - id: chat-ws
-                  uri: lb://realtime-chatapp-message-service
-                  predicates:
-                      - Path=/ws/**
-                  filters:
-                      - RewritePath=/ws/(?<remaining>.*), /ws/$\{remaining}
-                      - RemoveRequestHeader=Cookie
-                  metadata:
-                      websocket: true
-
-                - id: chat-service
-                  uri: lb://realtime-chatapp-message-service
-                  predicates:
-                      - Path=/chat/**
-                  filters:
-                      - StripPrefix=1
-                - id: storage-service
-                  uri: lb://realtime-chatapp-storage-service
-                  predicates:
-                      - Path=/storage/**
-                  filters:
-                      - StripPrefix=1
-            globalcors:
-                add-to-simple-url-handler-mapping: true
-                corsConfigurations:
-                    # "[/**]":
-                    #     allowedOriginPatterns: "*"
-                    #     allowedMethods:
-                    #         - GET
-                    #         - POST
-                    #         - PUT
-                    #         - PATCH
-                    #         - DELETE
-                    #         - OPTIONS
-                    #     allowedHeaders:
-                    #         - "*"
-                    #     allowCredentials: true
-
-                    "[/auth/**]":
-                        allowedOriginPatterns:
-                        - "*"
-                        allowedMethods:
-                        - GET
-                        - POST
-                        - PUT
-                        - PATCH
-                        - DELETE
-                        - OPTIONS
-                        allowedHeaders:
-                        - "*"
-                        allowCredentials: true
-
-                    "[/users/**]":
-                        allowedOriginPatterns:
-                        - "*"
-                        allowedMethods:
-                        - GET
-                        - POST
-                        - PUT
-                        - PATCH
-                        - DELETE
-                        - OPTIONS
-                        allowedHeaders:
-                        - "*"
-                        allowCredentials: true
-
-                    "[/chat/**]":
-                        allowedOriginPatterns:
-                        - "*"
-                        allowedMethods:
-                        - GET
-                        - POST
-                        - PUT
-                        - PATCH
-                        - DELETE
-                        - OPTIONS
-                        allowedHeaders:
-                        - "*"
-                        allowCredentials: true
-
-                    "[/storage/**]":
-                        allowedOriginPatterns:
-                        - "*"
-                        allowedMethods:
-                        - GET
-                        - POST
-                        - PUT
-                        - PATCH
-                        - DELETE
-                        - OPTIONS
-                        allowedHeaders:
-                        - "*"
-                        allowCredentials: true
-
-logging:
-    level:
-        org.springframework.cloud.gateway.filter: DEBUG
-        org.springframework.cloud.gateway.handler: DEBUG
-
-# management:
-#     tracing:
-#         sampling:
-#             probability: 1.0 # 100% sampling for development
-#     otlp:
-#         metrics:
-#             export:
-#                 url: ${OTEL_METRICS_URI:}
-#     opentelemetry:
-#         tracing:
-#             export:
-#                 otlp:
-#                     endpoint: ${OTEL_TRACES_URI:}
-#         logging:
-#             export:
-#                 otlp:
-#                     endpoint: ${OTEL_LOGS_URI:}
+eureka:
+    client:
+        service-url:
+            defaultZone: ${EUREKA_SERVER_URI:}
+    instance:
+        instance-id: ${spring.application.name}:${random.value}
