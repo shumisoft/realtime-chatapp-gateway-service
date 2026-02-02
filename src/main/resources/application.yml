@@ -12,12 +12,24 @@ spring:
                       - Path=/auth/**
                   filters:
                       - StripPrefix=1
+
                 - id: user-service
                   uri: lb://realtime-chatapp-user-service
                   predicates:
                       - Path=/users/**
                   filters:
                       - StripPrefix=1
+
+                - id: chat-ws
+                  uri: lb://realtime-chatapp-message-service
+                  predicates:
+                      - Path=/ws/**
+                  filters:
+                      - RewritePath=/ws/(?<remaining>.*), /ws/$\{remaining}
+                      - RemoveRequestHeader=Cookie
+                  metadata:
+                      websocket: true
+
                 - id: chat-service
                   uri: lb://realtime-chatapp-message-service
                   predicates:
@@ -27,17 +39,59 @@ spring:
             globalcors:
                 add-to-simple-url-handler-mapping: true
                 corsConfigurations:
-                    "[/**]":
-                        allowedOriginPatterns: "*"
+                    # "[/**]":
+                    #     allowedOriginPatterns: "*"
+                    #     allowedMethods:
+                    #         - GET
+                    #         - POST
+                    #         - PUT
+                    #         - PATCH
+                    #         - DELETE
+                    #         - OPTIONS
+                    #     allowedHeaders:
+                    #         - "*"
+                    #     allowCredentials: true
+
+                    "[/auth/**]":
+                        allowedOriginPatterns:
+                        - "*"
                         allowedMethods:
-                            - GET
-                            - POST
-                            - PUT
-                            - PATCH
-                            - DELETE
-                            - OPTIONS
+                        - GET
+                        - POST
+                        - PUT
+                        - PATCH
+                        - DELETE
+                        - OPTIONS
                         allowedHeaders:
-                            - "*"
+                        - "*"
+                        allowCredentials: true
+
+                    "[/users/**]":
+                        allowedOriginPatterns:
+                        - "*"
+                        allowedMethods:
+                        - GET
+                        - POST
+                        - PUT
+                        - PATCH
+                        - DELETE
+                        - OPTIONS
+                        allowedHeaders:
+                        - "*"
+                        allowCredentials: true
+
+                    "[/chat/**]":
+                        allowedOriginPatterns:
+                        - "*"
+                        allowedMethods:
+                        - GET
+                        - POST
+                        - PUT
+                        - PATCH
+                        - DELETE
+                        - OPTIONS
+                        allowedHeaders:
+                        - "*"
                         allowCredentials: true
 
 logging:

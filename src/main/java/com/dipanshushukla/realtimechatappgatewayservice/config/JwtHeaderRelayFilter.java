@@ -15,6 +15,12 @@ public class JwtHeaderRelayFilter implements WebFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
 
+        String path = exchange.getRequest().getURI().getPath();
+
+        if (path.startsWith("/ws")) {
+            return chain.filter(exchange); // Skip JWT logic for WebSockets
+        }
+
         return exchange.getPrincipal()
                 .filter(principal -> principal instanceof JwtAuthenticationToken)
                 .cast(JwtAuthenticationToken.class)
