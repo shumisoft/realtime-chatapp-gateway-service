@@ -36,6 +36,12 @@ spring:
                       - Path=/chat/**
                   filters:
                       - StripPrefix=1
+                - id: storage-service
+                  uri: lb://realtime-chatapp-storage-service
+                  predicates:
+                      - Path=/storage/**
+                  filters:
+                      - StripPrefix=1
             globalcors:
                 add-to-simple-url-handler-mapping: true
                 corsConfigurations:
@@ -81,6 +87,20 @@ spring:
                         allowCredentials: true
 
                     "[/chat/**]":
+                        allowedOriginPatterns:
+                        - "*"
+                        allowedMethods:
+                        - GET
+                        - POST
+                        - PUT
+                        - PATCH
+                        - DELETE
+                        - OPTIONS
+                        allowedHeaders:
+                        - "*"
+                        allowCredentials: true
+
+                    "[/storage/**]":
                         allowedOriginPatterns:
                         - "*"
                         allowedMethods:
